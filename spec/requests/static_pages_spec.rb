@@ -8,5 +8,10 @@ describe "StaticPages" do
       visit '/static_pages/home'
       expect(page).to have_content('Daily Weight')
     end
+
+    it "should have the title 'Home'" do
+      visit '/static_pages/home'
+      expect(page).to have_title("Daily Weight | Home")
+    end
   end
 end
