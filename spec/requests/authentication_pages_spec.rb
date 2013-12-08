@@ -4,7 +4,7 @@ describe "Authentication" do
 
   subject { page }
 
-  describe "signin page" do 
+  describe "signin page" do
     before { visit signin_path }
 
     it { should have_content('Sign in') }
@@ -70,7 +70,7 @@ describe "Authentication" do
             it { should have_title('Sign in') }
           end
 
-          describe "submitting to the udpate action" do
+          describe "submitting to the update action" do
             before { patch user_path(user) }
             specify { expect(response).to redirect_to(signin_path) }
           end
@@ -85,6 +85,11 @@ describe "Authentication" do
         describe "submitting a GET request to the Users#edit action" do
           before { get edit_user_path(wrong_user) }
           specify { expect(response).to redirect_to(root_url) }
+        end
+
+        describe "submitting a GET request to the Users#show action" do
+          before { visit user_path(wrong_user) }
+          it { should have_content('Daily Weight') }
         end
       end
     end
