@@ -16,6 +16,7 @@ describe User do
   it { should respond_to(:password_confirmation) }
   it { should respond_to(:remember_token) }
   it { should respond_to(:authenticate) }
+  it { should respond_to(:weights) }
 
   it { should be_valid }
 
@@ -29,13 +30,13 @@ describe User do
     it { should_not be_valid }
   end
 
-  describe "when name is too long" do 
+  describe "when name is too long" do
     before { @user.name = "a" * 51 }
     it { should_not be_valid }
   end
 
   describe "when email format is invalid" do
-    it "should be invalid" do 
+    it "should be invalid" do
       addresses = %w[user@foo,com user_at_foo.org example.user@foo.
                      foo@bar_baz.com foo@bar+baz.com]
       addresses.each do |invalid_address|
@@ -45,8 +46,8 @@ describe User do
     end
   end
 
-  describe "when email format is valid" do 
-    it "should be valid" do 
+  describe "when email format is valid" do
+    it "should be valid" do
       addresses = %w[user@foo.COM A_US-ER@f.b.org frst.lst@foo.jp a+b@baz.cn]
       addresses.each do |valid_address|
         @user.email = valid_address
@@ -102,6 +103,21 @@ describe User do
   describe "remember token" do
     before { @user.save }
     its(:remember_token) { should_not be_blank }
+  end
+
+  describe "weight associations" do
+
+    before { @user.save }
+    let!(:older_weight) do
+      FactoryGirl.create(:weight, user: @user, created_at: 1.day.ago)
+    end
+    let!(:newer_weight) do
+      FactoryGirl.create(:weight, user: @user, created_at: 1.hour.ago)
+    end
+
+    it "should have the right weight in the right order" do
+      expect(@user.weights.to_a). to eq [newer_weight, older_weight]
+    end
   end
 end
 
