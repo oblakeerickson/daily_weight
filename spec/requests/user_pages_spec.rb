@@ -6,10 +6,18 @@ describe "User pages" do
 
   describe "profile page" do
     let(:user) { FactoryGirl.create(:user) }
+    let!(:w1) { FactoryGirl.create(:weight, user: user, weight: 195.5, date: Date.now) }
+    let!(:w2) { FactoryGirl.create(:weight, user: user, weight: 194.5, date: Date.now) }
+
     before { visit user_path(user) }
 
     it { should have_content(user.name) }
     # it { should have_title(user.name) }
+
+    describe "weights" do
+      it { should have_content(w1.weight) }
+      it { should have_content(w2.weight) }
+    end
   end
 
   describe "signup page" do
